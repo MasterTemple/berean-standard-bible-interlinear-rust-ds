@@ -1,0 +1,17 @@
+pub mod adjective;
+pub mod adverb;
+pub mod aramaic_word;
+pub mod article;
+pub mod conjunction;
+pub mod demonstrative_pronoun;
+pub mod hebrew_word;
+pub mod interjection;
+pub mod interrogative_indefinite_pronoun;
+pub mod noun;
+pub mod particle;
+pub mod personal_possessive_pronoun;
+pub mod preposition;
+pub mod reciprocal_pronoun;
+pub mod reflexive_pronoun;
+pub mod relative_pronoun;
+pub mod verb;
