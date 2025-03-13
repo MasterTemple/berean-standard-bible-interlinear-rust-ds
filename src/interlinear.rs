@@ -1,5 +1,30 @@
-use bible_reference_parser::passage_segments::chapter_verse::ChapterVerse;
+use bible_reference_parser::{book_chapter_verse::BookChapterVerse, passage_segments::chapter_verse::ChapterVerse};
 
+/// Okay, but what about when Greek words are out of order?
+/// Maybe all BSB words are in order
+#[derive(Clone, Debug)]
+pub enum TranslatedWord {
+    /// " [This is the] record ": Text translated into segments
+    Text(Vec<TranslatedTextSegment>),
+    /// " - ": Not directly translated
+    Omitted,
+    /// " . . . ": Part of previous word
+    Earlier,
+    /// " vvv ": Part of upcoming word
+    Later,
+}
+
+#[derive(Clone, Debug)]
+pub enum TranslatedTextSegment {
+    /// "record" in " [This is the] record "
+    Word(String),
+    /// "This is the" in " [This is the] record "
+    Grammar(String),
+}
+
+/**
+This should be a mix of language, parsing, and strong's number
+*/
 #[derive(Clone, Debug)]
 pub enum Language {
     Hebrew,
@@ -7,15 +32,21 @@ pub enum Language {
     Aramaic,
 }
 
+#[derive(Clone, Debug)]
+pub struct InterlinearVerseEntry {
+    verse: BookChapterVerse,
+    words: Vec<InterlinearWordEntry>,
+}
+
 /// Taken from `BSB Translation Tables - xlsx` at https://berean.bible/downloads.htm
 /// - HTML Markup seems to use `|` instead of `"`
 #[derive(Clone, Debug)]
-pub struct InterlinearEntry {
+pub struct InterlinearWordEntry {
 
     /**
     Excel Column: `"Verse"`
     */
-    verse_id: ChapterVerse,
+    verse: BookChapterVerse,
 
     /**
     Excel Column: `"Language"`
@@ -50,6 +81,7 @@ pub struct InterlinearEntry {
 
     /**
     Excel Column: `"Parsing"`
+    I can probably merge this with Language, because parsing depends on language
     */
     parsing_code: String,
 
@@ -142,7 +174,7 @@ pub struct InterlinearEntry {
     ```
     where "record" corresponds to the Greek word and "[This is the]" captures the form/context/usage of the word
     */
-    english: String,
+    english: TranslatedWord,
 
     /**
     Excel Column: `"pnc"`
